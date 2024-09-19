@@ -1,0 +1,42 @@
+{% extends "base_generic.html" %}
+
+{%block page-title%}
+Update Course Details
+{%endblock%}
+
+{% block content %}
+<form action="" method="post" class=" mx-0 row gx-3 gy-4 mt-3">
+  {% csrf_token %}
+  <div class="col-12">
+    <label for="courseTitle" class="form-label">{{form.courseTitle.label}}</label>
+    {{form.courseTitle}}
+    {{form.courseTitle.errors}}
+  </div>
+  <div class="col-12">
+    <label for="description" class="form-label">{{form.description.label}}</label>
+    {{form.description}}
+    {{form.description.errors}}
+  </div>
+  <div class="col-12">
+    <label for="link" class="form-label">{{form.link.label}}</label>
+    {{form.link}}
+    {{form.link.errors}}
+  </div>
+  <div class="col-12 d-flex align-items-center justify-content-center mb-5">
+      <button type="submit" class="btn btn-primary btn-lg me-3">Update</button>  
+      <button class="btn btn-lg btn-danger" onclick="goBack()">Close</button>
+  
+  </div>
+
+  </form>
+{% endblock %} 
+
+
+{%block extra-js%}
+
+<script>
+function goBack() {
+window.history.back();
+}
+</script>
+{%endblock%}

@@ -1,0 +1,55 @@
+{% extends "base_generic.html" %}
+
+{%block page-title%}
+  Update Post Details
+{%endblock%}
+{% block content %}
+<form action="" method="post" class=" mx-0 row gx-3 gy-4 mt-3">
+  {% csrf_token %}
+  <div class="col-12">
+    <label for="job_title" class="form-label">{{form.job_title.label}}<span style="color: red; font-weight: bolder;">*</span></label>
+    {{form.job_title}}
+    {{form.job_title.errors}}
+  </div>
+  <div class="col-6">
+    <label for="jobDescription" class="form-label">{{form.jobDescription.label}}<span style="color: red; font-weight: bolder;">*</span></label>
+    {{form.jobDescription}}
+    {{form.jobDescription.errors}}
+    
+  </div>
+  <div class="col-6">
+    <label for="workhours" class="form-label">{{form.workhours.label}}<span style="color: red; font-weight: bolder;">*</span></label>
+    {{form.workhours}}
+    {{form.workhours.errors}}
+  </div>
+  <div class="col-6">
+    <label for="contact" class="form-label">{{form.contact.label}}<span style="color: red; font-weight: bolder;">*</span></label>
+    {{form.contact}}
+    {{form.contact.errors}}
+  </div>
+  <div class="col-6">
+    <label for="city" class="form-label">{{form.city.label}}<span style="color: red; font-weight: bolder;">*</span></label>
+    {{form.city}}
+    {{form.city.errors}}
+  </div>
+  <div class="col-12">
+    <label for="salary" class="form-label">{{form.salary.label}}<span style="color: red; font-weight: bolder;">*</span></label>
+    {{form.salary}}
+    {{form.salary.errors}}
+  </div>
+  <div class="col-12 d-flex align-items-center justify-content-center mb-5">
+    <button type="submit" class="btn btn-primary btn-lg me-5"> Update </button>
+    <button class="btn btn-lg btn-danger" onclick="goBack()">Close</button>
+
+  </div>
+  </form>
+{% endblock %} 
+
+{%block extra-js%}
+
+<script>
+function goBack() {
+window.history.back();
+}
+</script>
+{%endblock%}

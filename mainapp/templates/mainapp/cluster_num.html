@@ -1,0 +1,153 @@
+{% extends "base_generic.html" %}
+
+{% block page-title%}
+  Test Different Number of clusters
+{% endblock%}
+
+{% block content %}
+{% if running %}
+  <h2 class="ms-5 mt-4">Another training Request is Running ...</h2>
+  <h2 class="ms-5 mt-2">Come back in  a few minutes</h2>
+{% else %}
+
+
+
+<form action="{% url 'test_clusters_number' %}" method="post" class=" mx-0 row gx-3 gy-4 mt-3">
+  {% csrf_token %}
+  <div class="col-4">
+    <label for="start_number" class="form-label">{{ form.start_number.label}}</label>
+    {{ form.start_number }}
+  </div>
+  <div class="col-4">
+    <label for="end_number" class="form-label">{{ form.end_number.label}}</label>
+    {{ form.end_number }}
+  </div>
+  
+  <div class="col-4">
+    <label for="step" class="form-label">{{ form.step.label}}</label>
+    {{ form.step }}
+  </div>
+  
+  <div class="col-6">
+    <label for="word2vec_vector_size" class="form-label">{{ form.word2vec_vector_size.label}}</label>
+    {{ form.word2vec_vector_size}}
+    {{ form.word2vec_vector_size.help_text}}
+  </div>
+  <div class="col-6">
+    <label for="word2vec_vector_size" class="form-label">{{ form.word2vec_window_size.label}}</label>
+    {{ form.word2vec_window_size}}
+    {{ form.word2vec_window_size.help_text}}
+  </div>
+  <div class="col-6">
+    <label for="word2vec_vector_size" class="form-label">{{ form.word2vec_word_min_count_percentage.label}}</label>
+    {{ form.word2vec_word_min_count_percentage}}
+    <h6 class="mt-2 ms-2 mb-4">{{ form.word2vec_word_min_count_percentage.help_text}}</h6>
+  </div>
+  <div class="col-6">
+    <label for="word2vec_vector_size" class="form-label">{{ form.start_date.label_tag }}</label>
+    {{ form.start_date }}
+    <h6 class="mt-2 ms-2 mb-4">{{ form.start_date.help_text }}</h6>
+  </div>
+  {% if form.errors %}
+  <div class="alert alert-danger" role="alert">
+    There were some errors in your form:
+    <ul>
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li>{{ field.label }}: {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+<input type="hidden" name="form_submitted" value="test">
+  <div class="col-12 d-flex align-items-center justify-content-center mb-4">
+      <button type="submit" class="btn btn-primary btn-lg me-5">Test</button>  
+      <button class="btn btn-lg btn-danger" onclick="goBack()">Close</button>
+  </div>
+
+  </form>
+
+
+
+<div class="table-responsive-sm">
+<table style="width: 99%;" class="text-center mx-auto table mt-5 table-drak table-striped border-3">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Silhouette Score</th>
+      <th scope="col">Calinski Harabasz Score</th>
+      <th scope="col">Number Of Clusters</th>
+      <th scope="col">Total Records</th>
+      <th scope="col">Word2vec word min-count (percentage)</th>
+      <th scope="col">Word2vec window size</th>
+      <th scope="col">Word2vec vector size</th>
+      <th scope="col">Start Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if results %}
+      {% for record in results %}
+
+    <tr>
+      <th scope="row">{{record.id}}</th>
+      {% if record.silhouette_score >= 0.24%}
+      <td style="color: green;font-weight: bolder;">
+        {{record.silhouette_score}}
+      </td>
+      {%elif record.silhouette_score < 0.15%}
+      <td style="color: red;font-weight: bolder;">
+        {{record.silhouette_score}}
+      </td>
+      {%else%}
+      <td style="color: orange;font-weight: bolder;">
+        {{record.silhouette_score}}
+      </td>
+      {%endif%}
+      <td>{{record.calinski_harabasz_score}}</td>
+      <td>{{record.number_of_clusters}}</td>
+      <td>{{record.total_records}}</td>
+      <td>{{record.word2vec_word_min_count_percentage}}</td>
+      <td>{{record.word2vec_window_size}}</td>
+      <td>{{record.word2vec_vector_size}}</td>
+      <td>{{record.from_date}}</td>
+    </tr>
+    {% endfor %}
+  {% endif %} 
+  </tbody>
+</table>
+{%if graph%}    
+
+<div class=" d-flex align-items-center justify-content-center mb-4">  
+<form method="post">
+  {% csrf_token %}
+
+  <input type="hidden" name="form_submitted" value="plot">
+  <button type="submit" class="btn btn-primary btn-lg ms-5 mt-5 mb-5">generate plots</button>        
+</form>
+</div>
+
+<div class="ms-3 mt-3 mb-3" style="font-weight: bolder;">
+  <img src="../../../static/Images/sil_score.png" alt="Click generate plots to see silhouette_score plotted">
+</div>
+<div class="ms-3 mt-3 mb-3" style="font-weight: bolder;">
+  <img src="../../../static/Images/elbow_method.png" alt="Click generate plots to see elbow plot">
+</div>
+<div class="ms-3 mt-3 mb-3" style="font-weight: bolder;">
+  <img src="../../../static/Images/ch_score.png" alt="Click generate plots to see calinski_harabasz_score plotted">
+</div>
+{%endif%}
+</div>
+{%endif%}
+{% endblock %}
+
+
+{%block extra-js%}
+
+<script>
+function goBack() {
+window.history.back();
+}
+</script>
+{%endblock%}
